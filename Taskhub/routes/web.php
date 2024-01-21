@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,8 +15,20 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('auth.login');
 });
+
+route::get('/add_category',[CategoryController::class,'add']);
+
+route::post('/add',[CategoryController::class,'create']);
+
+route::get('/edit/{id}',[CategoryController::class,'edit']);
+
+route::get('/add_category',[CategoryController::class,'add']);
+
+Route::post('/update/{id}', [CategoryController::class, 'update']);
+
+route::get('/delete/{id}',[CategoryController::class,'delete']);
 
 Route::middleware([
     'auth:sanctum',
