@@ -12,12 +12,18 @@
             margin-left: 10%;
             margin-top: 20px;
         }
+        .add h3{
+            padding-top: 80px;
+        }
         h3{
             color: white;
             padding-left: 10%;
             font-size: 26px !important;
             font-weight: bold !important;
-            padding-top: 80px;
+        }
+        .side h3{
+            margin-top: -20px;
+            margin-bottom: 40px;
         }
 
         input[type="text"]{
@@ -62,8 +68,9 @@
             display: flex;
         }
         .side p{
-            margin-right: 110px;
-            width: 50px;
+            padding-right: 110px;
+            width: 140px;
+            white-space: pre;
         }
         .side a{
             padding-right: 20px;
@@ -77,14 +84,13 @@
         .delete a:hover{
             color: red;
         }
-
-
     </style>
 </head>
 <body>
 <x-app-layout>
     <div class="main">
     <div class="side">
+        <h3>Categories</h3>
         @foreach($category as $element)
             <div class="box">
                 <p>{{$element->name}}</p>

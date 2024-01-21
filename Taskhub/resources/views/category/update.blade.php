@@ -5,19 +5,25 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Add Category</title>
+    <title>Update Category</title>
     <style>
         form{
             color: white;
             margin-left: 10%;
             margin-top: 20px;
         }
+        .add h3{
+            padding-top: 80px;
+        }
         h3{
             color: white;
             padding-left: 10%;
             font-size: 26px !important;
             font-weight: bold !important;
-            padding-top: 80px;
+        }
+        .side h3{
+            margin-top: -20px;
+            margin-bottom: 40px;
         }
 
         input[type="text"]{
@@ -78,14 +84,13 @@
         .delete a:hover{
             color: red;
         }
-
-
     </style>
 </head>
 <body>
 <x-app-layout>
     <div class="main">
         <div class="side">
+            <h3>Categories</h3>
             @foreach($categories as $element)
                 <div class="box">
                     <p>{{$element->name}}</p>

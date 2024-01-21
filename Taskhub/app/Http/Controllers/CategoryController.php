@@ -37,7 +37,7 @@ class CategoryController extends Controller
         $category = Category::find($id);
         $id = Auth::user()->id;
         $categories = Category::where('user_id','=',$id)->get();
-
+        echo "hello";
         return view('category/update',compact('category'),compact('categories'));
     }
 
