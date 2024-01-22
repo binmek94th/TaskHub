@@ -81,6 +81,7 @@
             padding: 5px 10px;
             border-radius: 5px;
         }
+
         .add-task a:hover {
             background-color: #0056b3;
         }
@@ -95,6 +96,7 @@
             cursor: pointer;
             color: orange;
         }
+
     </style>
 </head>
 <body>
@@ -115,9 +117,16 @@
                         @foreach($tasks as $obj)
                             @if($element->id == $obj->category_id)
                                 <div class="element">
-                                    <ul>
-                                    <li><a href="{{url('edit_task', $obj->id)}}">{{$obj->name}}</a></li>
-                                    </ul>
+                                        <a href="{{url('edit_task', $obj->id)}}">
+                                            <ul>
+                                                <li style="padding-top: 3px">{{$obj->name}}</li>
+                                                <ul>
+                                                    @foreach($subTasks[$obj->id] as $sub)
+                                                        <li>{{$sub->name}}</li>
+                                                    @endforeach
+                                                </ul>
+                                            </ul>
+                                        </a>
                                 </div>
                             @endif
                         @endforeach
@@ -128,18 +137,29 @@
                 </div>
             </div>
             <script>
-                // Calculate and set the height of the box based on tasks list
-                var box = document.getElementById('box-{{$element->id}}');
-                var tasksList = box.querySelector('.tasks ul');
-                var size = tasksList.clientHeight;
-                console.log(size);
-                if(size == 0){
-                    size = 100;
-                }
-                else{
-                    size += 100;
-                }
-                box.style.height = size+ 'px';
+                document.addEventListener('DOMContentLoaded', function() {
+                    // Run the script after the DOM has fully loaded
+                    @foreach($category as $element)
+                    var box = document.getElementById('box-{{$element->id}}');
+                    var tasksList = box.querySelector('.tasks ul');
+                    var size = tasksList.clientHeight;
+
+                    if (size == 0) {
+                        size = 100;
+                    } else {
+                        size += 110;
+                    }
+                    box.style.height = size + 'px';
+
+                    var elements = document.querySelectorAll('.element');
+                    elements.forEach(function(element) {
+                        var elementList = element.querySelector('ul');
+                        var elementSize = elementList.clientHeight;
+                        elementSize += 3;
+                        element.style.height = elementSize + 'px';
+                    });
+                    @endforeach
+                });
             </script>
         @endforeach
     </div>

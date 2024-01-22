@@ -48,6 +48,20 @@
             background-color: #7f8ae8;
         }
 
+        .add-sub-tag {
+            margin-top: 10px;
+            font-size: 20px;
+        }
+
+        /* Style for subtag input */
+        .subtag input {
+            margin-top: 15px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            padding: 10px;
+            width: 200px;
+            height: 30px;
+        }
     </style>
 </head>
 <body>
@@ -70,6 +84,25 @@
             <br>
             <input type="date" name="due_date">
             <br>
+            <button type="button" id="addNewSubtag" class="add-sub-tag">Add Subtag</button>
+            <div id="newSubtagContainer"></div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    // Add new subtag input dynamically
+                    document.getElementById('addNewSubtag').addEventListener('click', function () {
+                        const container = document.getElementById('newSubtagContainer');
+                        const subtagDiv = document.createElement('div');
+                        subtagDiv.className = 'subtag';
+
+                        const input = document.createElement('input');
+                        input.type = 'text';
+                        input.name = 'newSubtags[]';
+
+                        subtagDiv.appendChild(input);
+                        container.appendChild(subtagDiv);
+                    });
+                });
+            </script>
             <input type="submit" value="Add">
         </form>
         </div>

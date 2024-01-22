@@ -29,7 +29,7 @@ class CategoryController extends Controller
         $data->user_id = Auth::user()->id;
         $data->save();
 
-        return redirect()->back();
+        return redirect('dashboard');
     }
 
     public function edit($id)
@@ -48,7 +48,7 @@ class CategoryController extends Controller
         $category->name = $request->name;
         $category->save();
 
-        return redirect('add_category');
+        return redirect('dashboard');
     }
 
     public function delete($id)
@@ -56,6 +56,6 @@ class CategoryController extends Controller
         $data = Category::find($id);
 
         $data->delete();
-        return redirect('add_category');
+        return redirect('dashboard');
     }
 }

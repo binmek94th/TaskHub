@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\SubTasks;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -14,8 +15,13 @@ class HomeController extends Controller
 
         $category = Category::where('user_id', '=', $id)->get();
         $tasks = Task::where('user_id', '=', $id)->get();
+        $subTasks = [];
 
-        return view('dashboard', compact('category'), compact('tasks'));
+        foreach ($tasks as $task) {
+            $subTasks[$task->id] = SubTasks::where('task_id', '=', $task->id)->get();
+        }
+
+        return view('dashboard', compact('category', 'tasks', 'subTasks'));
     }
 
     public function add($id)
@@ -40,16 +46,51 @@ class HomeController extends Controller
         $category = Category::where('user_id', '=', $id)->get();
         $tasks = Task::where('user_id', '=', $id)->get();
 
+        if ($request->has('newSubtags')) {
+            // Loop through each new subtag and create a SubTask
+            foreach ($request->input('newSubtags') as $subtagName) {
+                $subtask = new SubTasks();
+                $subtask->name = $subtagName;
+                $subtask->task_id = $task->id; // Associate with the newly created task
+                $subtask->save();
+            }
+        }
+
         return view('/dashboard', compact('category'), compact('tasks'));
     }
 
     public function edit($id)
     {
-        $id = Auth::user()->id;
-        $task = Task::where('id', '=', $id)->get();
+        $task = Task::findOrFail($id);
         $category = Category::find($id);
+        $task_id = $task->id;
+        $sub_task = SubTasks::where('task_id', '=',$task_id)->get();
+        return view('task/edit',compact('task'), compact('sub_task'));
+    }
 
-        return view('task/edit',compact('task'));
+    public function update(Request $request , $id){
+
+        $task = Task::find($id);
+        $task->name = $request->name;
+        $task->description = $request->description;
+        $task->due_date = $request->due_date;
+
+        $task->save();
+        $id = Auth::user()->id;
+        $category = Category::where('user_id', '=', $id)->get();
+        $tasks = Task::where('user_id', '=', $id)->get();
+
+        if ($request->has('newSubtags')) {
+            // Loop through each new subtag and create a SubTask
+            foreach ($request->input('newSubtags') as $subtagName) {
+                $subtask = new SubTasks();
+                $subtask->name = $subtagName;
+                $subtask->task_id = $task->id; // Associate with the newly created task
+                $subtask->save();
+            }
+        }
+
+        return view('/dashboard', compact('category'), compact('tasks'));
     }
 
 }
