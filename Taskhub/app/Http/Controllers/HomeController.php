@@ -80,6 +80,9 @@ class HomeController extends Controller
         $task->due_date = $request->due_date;
         $task->save();
 
+        $task->is_completed = $request->has('task_completed') ? 1 : 0;
+        $task->save();
+
         // Update completed attribute to 0 for subtasks not selected
         SubTasks::where('task_id', $task->id)->update(['is_completed' => 0]);
 
@@ -110,5 +113,19 @@ class HomeController extends Controller
         return view('dashboard', compact('category', 'tasks', 'subTasks'));
     }
 
+    public function delete($id)
+    {
+        $data = Task::find($id);
+
+        $data->delete();
+        return redirect('dashboard');
+    }
+    public function delete_sub($id)
+    {
+        $data = SubTasks::find($id);
+
+        $data->delete();
+        return redirect('dashboard');
+    }
 
 }

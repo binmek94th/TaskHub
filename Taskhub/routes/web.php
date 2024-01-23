@@ -41,6 +41,10 @@ route::get('/edit_task/{id}',[HomeController::class,'edit']);
 
 route::post('/update_task/{id}',[HomeController::class,'update']);
 
+route::get('/delete_task/{id}',[HomeController::class,'delete']);
+
+route::get('/delete_sub_task/{id}',[HomeController::class,'delete_sub']);
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),

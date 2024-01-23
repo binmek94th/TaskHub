@@ -19,6 +19,7 @@
             margin-bottom: 10px !important;
         }
         .form{
+            margin-top: 50px;
             color: white;
             display: flex;
             width: 100%;
@@ -68,7 +69,8 @@
             background-color: #7f8ae8;
         }
         .add-sub-tag {
-            margin-top: 10px;
+            margin-top: 20px;
+            margin-bottom: 50px;
             font-size: 20px;
         }
 
@@ -105,16 +107,18 @@
         .canvas{
             margin: 20px;
         }
-        .radio{
+        .checkbox{
             display: flex;
+            padding-left: 10px;
         }
-        .radio input[type=checkbox]{
+        .checkbox input[type=checkbox]{
             margin-right: 10px;
         }
 
-        .radio P{
+        .checkbox label{
             margin-top: -5px;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            width: 100px;
         }
         #clearSelection {
             width: 60px;
@@ -130,11 +134,51 @@
         }
         .sub-tag-head{
             display: flex;
+            margin-bottom: 10px;
         }
         .update-btn{
             position: absolute;
             top: 40px;
             right: 180px;
+        }
+        h5{
+            margin-top: 10px !important;
+            font-size: 20px !important;
+            margin-bottom: 10px !important;
+        }
+        .header{
+            display: flex;
+            margin-bottom: -50px;
+        }
+        .header input[type=checkbox]{
+            margin-top: 5px;
+            height: 30px;
+            width: 30px;
+            margin-right: 20px;
+        }
+        .delete{
+            right: 340px;
+            background-color: red !important;
+            position: absolute;
+            top: 92px;
+            width: 90px;
+            height: 40px;
+            border-radius: 15px;
+            padding-top: 8px;
+            padding-left: 20px;
+            font-size: 17px;
+        }
+        .delete:hover{
+            background-color: #e74949 !important;
+        }
+        .delete-sub-task{
+            margin-left: 18%;
+            margin-top: -5px;
+            font-size: 15px;
+            color: red;
+        }
+        .delete-sub-task:hover{
+            color: #d96d6d;
         }
 
 
@@ -143,9 +187,12 @@
 <body>
 <x-app-layout>
     <div class="main">
-        <h3>Task</h3>
+        <form action="{{url('/update_task',$task->id)}}" method="post">
+        <div class="header">
+            <input type="checkbox" value="1" name="task_completed" {{ $task->is_completed ? 'checked' : '' }}>
+            <h3>Task</h3>
+        </div>
         <div class="form">
-            <form action="{{url('/update_task',$task->id)}}" method="post" class="form">
                 <div class="first-side">
                     @csrf
                     <label></label>
@@ -167,17 +214,35 @@
                         <button type="button" id="clearSelection">Clear</button>
                     </div>
                         @foreach($sub_task as $element)
-                            <div class="radio">
-                            <input type="checkbox" name="subtasks[]" value="{{$element->id}}" {{ $element->is_completed ? 'checked' : '' }}>
-                            <p>{{$element->name}}</p>
+                            <div class="checkbox">
+                                @if(!$element->is_completed)
+                                    <input  type="checkbox" name="subtasks[]" value="{{$element->id}}" {{ $element->is_completed ? 'checked' : '' }}>
+                                    <label for="subtasks[]">{{$element->name}}</label>
+                                    <div class="delete-sub-task">
+                                        <a onclick="return confirm('are you sure?')" href="{{url('delete_sub_task', $element->id)}}">Delete</a>
+                                    </div>
+                                @endif
+
                             </div>
                         @endforeach
 
+                            <h5>Completed</h5>
+                        @foreach($sub_task as $element)
+                            <div class="checkbox">
+                                @if($element->is_completed)
+                                    <input  type="checkbox" name="subtasks[]" value="{{$element->id}}" {{ $element->is_completed ? 'checked' : '' }}>
+                                    <label for="subtasks[]">{{$element->name}}</label>
+                                    <div class="delete-sub-task">
+                                        <a onclick="return confirm('are you sure?')" href="{{url('delete_sub_task', $element->id)}}">Delete</a>
+                                    </div>
+                                @endif
+                            </div>
+                        @endforeach
 
                 <button type="button" id="addNewSubtag" class="add-sub-tag">Add Subtag</button>
-                <div id="newSubtagContainer"></div>
-
-
+                <div class="delete-link">
+                    <a class="delete" onclick="return confirm('are you sure?')" href="{{url('delete_task', $task->id)}}">Delete</a>
+                </div>
                 <input class="update-btn" type="submit" value="Update">
                 </div>
                 <div class="second-side">
@@ -193,9 +258,9 @@
 
                     </div>
                 </div>
+        </div>
             </form>
         </div>
-    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {

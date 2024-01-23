@@ -57,7 +57,8 @@
             width: 60%;
         }
         .box{
-            background-color: #1c233a;            border-radius: 10px;
+            background-color: #1c233a;
+            border-radius: 10px;
             width: 65%;
             padding: 5px;
             height: 35px;
@@ -96,10 +97,9 @@
                 <div class="modify">
                 <a href="{{url('edit', $element->id)}}">Edit</a>
                     <div class="delete">
-                <a onclick="return confirm('are you sure?')" href="{{url('delete', $element->id)}}">Delete</a>
+                        <a onclick="return confirm('are you sure?')" href="{{url('delete', $element->id)}}">Delete</a>
                     </div>
                 </div>
-
             </div>
         @endforeach
     </div>
