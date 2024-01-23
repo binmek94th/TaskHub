@@ -56,7 +56,11 @@ class HomeController extends Controller
             }
         }
 
-        return view('/dashboard', compact('category'), compact('tasks'));
+        foreach ($tasks as $task) {
+            $subTasks[$task->id] = SubTasks::where('task_id', '=', $task->id)->get();
+        }
+
+        return view('/dashboard', compact('category', 'tasks', 'subTasks'));
     }
 
     public function edit($id)
@@ -68,18 +72,22 @@ class HomeController extends Controller
         return view('task/edit',compact('task'), compact('sub_task'));
     }
 
-    public function update(Request $request , $id){
-
+    public function update(Request $request, $id)
+    {
         $task = Task::find($id);
         $task->name = $request->name;
         $task->description = $request->description;
         $task->due_date = $request->due_date;
-
         $task->save();
-        $id = Auth::user()->id;
-        $category = Category::where('user_id', '=', $id)->get();
-        $tasks = Task::where('user_id', '=', $id)->get();
 
+        // Update completed attribute to 0 for subtasks not selected
+        SubTasks::where('task_id', $task->id)->update(['is_completed' => 0]);
+
+        // Get selected subtask IDs and update completed attribute to 1
+        $selectedSubtaskIds = (array) $request->input('subtasks', []);
+        SubTasks::whereIn('id', $selectedSubtaskIds)->update(['is_completed' => 1]);
+
+        // Add new subtasks
         if ($request->has('newSubtags')) {
             // Loop through each new subtag and create a SubTask
             foreach ($request->input('newSubtags') as $subtagName) {
@@ -90,7 +98,17 @@ class HomeController extends Controller
             }
         }
 
-        return view('/dashboard', compact('category'), compact('tasks'));
+        $id = Auth::user()->id;
+        $category = Category::where('user_id', '=', $id)->get();
+        $tasks = Task::where('user_id', '=', $id)->get();
+        $subTasks = [];
+
+        foreach ($tasks as $task) {
+            $subTasks[$task->id] = SubTasks::where('task_id', '=', $task->id)->get();
+        }
+
+        return view('dashboard', compact('category', 'tasks', 'subTasks'));
     }
+
 
 }

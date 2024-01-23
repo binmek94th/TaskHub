@@ -16,6 +16,7 @@
         h4{
             font-size: 22px !important;
             font-weight: bold !important;
+            margin-bottom: 10px !important;
         }
         .form{
             color: white;
@@ -56,12 +57,12 @@
         }
         input[type="submit"]{
             margin-top: 50px;
-            width: 80px;
-            height: 30px;
+            width: 100px;
+            height: 40px;
             background-color: #6774f3;
             border-radius: 15px;
             cursor: pointer;
-            margin-left: 220px;
+            margin-left: 85%;
         }
         input[type="submit"]:hover{
             background-color: #7f8ae8;
@@ -80,6 +81,62 @@
             width: 200px;
             height: 30px;
         }
+        .box{
+            background-color: #1c233a;
+            margin-top: 20px;
+            width: 70%;
+            height: 300px;
+            border-radius: 15px;
+            padding-top: 10px;
+        }
+        .circle{
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background-color: #6774f3;
+        }
+        .line{
+            position: relative;
+            left: 6px;
+            width: 2px;
+            height: 50px;
+            background-color: #6774f3;
+        }
+        .canvas{
+            margin: 20px;
+        }
+        .radio{
+            display: flex;
+        }
+        .radio input[type=checkbox]{
+            margin-right: 10px;
+        }
+
+        .radio P{
+            margin-top: -5px;
+            margin-bottom: 10px;
+        }
+        #clearSelection {
+            width: 60px;
+            margin-left: 25%;
+            height: 30px;
+            background-color: #1c233a;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+
+        #clearSelection:hover {
+            background-color: #2a3350;
+        }
+        .sub-tag-head{
+            display: flex;
+        }
+        .update-btn{
+            position: absolute;
+            top: 40px;
+            right: 180px;
+        }
+
 
     </style>
 </head>
@@ -105,19 +162,37 @@
                     <input type="date" name="due_date" value="{{$task->due_date}}">
                     <br>
                     <br>
-                    <h4>Sub Tags</h4>
-                    <ul>
+                    <div class="sub-tag-head">
+                        <h4>Sub Tags</h4>
+                        <button type="button" id="clearSelection">Clear</button>
+                    </div>
                         @foreach($sub_task as $element)
-                            <li>{{ $element->name }}</li>
+                            <div class="radio">
+                            <input type="checkbox" name="subtasks[]" value="{{$element->id}}" {{ $element->is_completed ? 'checked' : '' }}>
+                            <p>{{$element->name}}</p>
+                            </div>
                         @endforeach
-                    </ul>
+
+
                 <button type="button" id="addNewSubtag" class="add-sub-tag">Add Subtag</button>
                 <div id="newSubtagContainer"></div>
 
 
-                <input type="submit" value="Update">
+                <input class="update-btn" type="submit" value="Update">
                 </div>
-                <div class="second-side"></div>
+                <div class="second-side">
+                    <h4 style="margin-top: -50px">Status</h4>
+                    <div class="box">
+                        <div class="canvas">
+                            <div class="circle"></div>
+                            <div class="line"></div>
+                            <div class="circle"></div>
+                        </div>
+                        <div class="content">
+                        </div>
+
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -136,6 +211,12 @@
 
                 subtagDiv.appendChild(input);
                 container.appendChild(subtagDiv);
+            });
+            document.getElementById('clearSelection').addEventListener('click', function () {
+                const checkboxes = document.querySelectorAll('.radio input[type=checkbox]');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
             });
         });
     </script>

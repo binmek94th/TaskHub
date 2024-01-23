@@ -57,7 +57,7 @@
             width: 60%;
         }
         .box{
-            border: solid 1px white;
+            background-color: #1c233a;
             border-radius: 10px;
             width: 65%;
             padding: 5px;
