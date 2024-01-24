@@ -62,14 +62,15 @@
             width: 65%;
             padding: 5px;
             height: 35px;
-            padding-left: 10%;
+            padding-left: 5%;
             margin-bottom: 15px;
             margin-left: 10%;
             display: flex;
         }
         .side p{
-            padding-right: 110px;
-            width: 140px;
+            margin-right: 25%;
+            width: 100px;
+            padding-right: 50px;
             white-space: pre;
         }
         .side a{
@@ -84,6 +85,7 @@
         .delete a:hover{
             color: red;
         }
+
     </style>
 </head>
 <body>

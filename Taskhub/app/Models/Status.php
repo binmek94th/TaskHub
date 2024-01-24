@@ -5,12 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Task extends Model
+class Status extends Model
 {
     use HasFactory;
 
-    public function statuses()
-    {
-        return $this->hasMany(Status::class, 'task_id');
-    }
+
 }
