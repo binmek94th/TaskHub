@@ -62,6 +62,14 @@
             width: 200px;
             height: 30px;
         }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .error-message p{
+            margin-bottom: -30px;
+        }
     </style>
 </head>
 <body>
@@ -69,14 +77,15 @@
     <div class="main">
         <h3>Add Task</h3>
         <div class="form">
-        <form action="{{url('/add_task')}}" method="post">
+        <form action="{{url('/add_task')}}" method="post" onsubmit="return validateForm()">
             @csrf
-            <input name="category" value="{{$category->id}}" hidden>
-            <label>Name</label>
+            <input name="category" id="nameinput" value="{{$category->id}}" hidden>
+            <label for="name">Name</label>
+            <div id="nameError" class="error-message"><p></p></div> <!-- Display error message -->
             <br>
             <input type="text" name="name">
             <br>
-            <label>Description</label>
+            <label for="description">Description</label>
             <br>
             <input type="text" name="description">
             <br>
@@ -86,6 +95,7 @@
             <br>
             <button type="button" id="addNewSubtag" class="add-sub-tag">Add Subtag</button>
             <div id="newSubtagContainer"></div>
+
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
                     // Add new subtag input dynamically

@@ -96,8 +96,33 @@
             cursor: pointer;
             color: orange;
         }
+        .tasks ul.completed {
+            display: none;
+        }
 
+        /* Add this style to show completed tasks when the "completed" class is present */
+        .completed .element1 {
+            display: none;
+        }
+        .completed-header{
+            display: flex;
+        }
+        .completed-header p{
+            margin-right: 100px;
+        }
+
+        .second{
+            margin-left: 10px;
+            margin-bottom: 10px;
+        }
+        .second ul:hover{
+            background-color: #141c2d;
+            border-radius: 15px;
+        }
     </style>
+
+
+
 </head>
 <body>
 <x-app-layout>
@@ -107,30 +132,52 @@
         @foreach($category as $element)
             <div class="box" id="box-{{$element->id}}">
                 <div class="header">
-                <h6>{{$element->name}}</h6>
-                <div class="modify">
-                    <a href="{{url('edit', $element->id)}}">Edit</a>
-                </div>
+                    <h6>{{$element->name}}</h6>
+                    <div class="modify">
+                        <a href="{{url('edit', $element->id)}}">Edit</a>
+                    </div>
                 </div>
                 <div class="tasks">
                     <ul>
                         @foreach($tasks as $obj)
-                            @if($element->id == $obj->category_id)
+                            @if($element->id == $obj->category_id and $obj->is_completed == 0)
                                 <div class="element">
-                                        <a href="{{url('edit_task', $obj->id)}}">
+                                    <a href="{{url('edit_task', $obj->id)}}">
+                                        <ul>
+                                            <li style="padding-top: 3px">{{$obj->name}}</li>
                                             <ul>
-                                                <li style="padding-top: 3px">{{$obj->name}}</li>
-                                                <ul>
-                                                    @foreach($subTasks[$obj->id] as $sub)
-                                                        <li>{{$sub->name}}</li>
-                                                    @endforeach
-                                                </ul>
+                                                @foreach($subTasks[$obj->id] as $sub)
+                                                    <li>{{$sub->name}}</li>
+                                                @endforeach
                                             </ul>
-                                        </a>
+                                        </ul>
+                                    </a>
                                 </div>
                             @endif
                         @endforeach
                     </ul>
+                    <div class="completed-header">
+                        <p>Completed</p>
+                        <button id="image" class="drop rotated"><img height="15px" width="15px" src="{{ asset('image/arrow.png') }}"></button>
+                    </div>
+                    <div class="completed">
+                        @foreach($tasks as $obj)
+                            @if($element->id == $obj->category_id and $obj->is_completed == 1)
+                                <div class="element1 second">
+                                    <a href="{{url('edit_task', $obj->id)}}">
+                                        <ul>
+                                            <li style="padding-top: 3px; text-decoration: line-through">{{$obj->name}}</li>
+                                            <ul>
+                                                @foreach($subTasks[$obj->id] as $sub)
+                                                    <li style="text-decoration: line-through">{{$sub->name}}</li>
+                                                @endforeach
+                                            </ul>
+                                        </ul>
+                                    </a>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
                 <div class="add-task">
                     <a href="{{url('add_task', $element->id)}}">+ Add a task</a>
@@ -139,15 +186,15 @@
             <script>
                 document.addEventListener('DOMContentLoaded', function() {
                     // Run the script after the DOM has fully loaded
-                    @foreach($category as $element)
-                    var box = document.getElementById('box-{{$element->id}}');
+                    @foreach($category as $element1)
+                    var box = document.getElementById('box-{{$element1->id}}');
                     var tasksList = box.querySelector('.tasks ul');
                     var size = tasksList.clientHeight;
 
-                    if (size == 0) {
-                        size = 100;
+                    if (size < 1) {
+                        size = 130; // Default box size increased by 50px
                     } else {
-                        size += 110;
+                        size += 140;
                     }
                     box.style.height = size + 'px';
 
@@ -170,6 +217,44 @@
     </div>
 
 </x-app-layout>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        @foreach($category as $element)
+        // Add a click event listener to the drop button in each box
+        var dropButton = document.querySelector('#box-{{$element->id}} .drop');
+        dropButton.addEventListener('click', function() {
+            var box = document.getElementById('box-{{$element->id}}');
+
+            // Check if the initial height has been recorded
+            var initialHeightRecorded = box.getAttribute('data-initial-height-recorded');
+            if (!initialHeightRecorded) {
+                // If not recorded, store the initial height
+                box.setAttribute('data-initial-height', box.clientHeight);
+                box.setAttribute('data-initial-height-recorded', 'true');
+            }
+
+            var completedTasks = document.querySelectorAll('#box-{{$element->id}} .completed .element1');
+
+            // Toggle the visibility of completed tasks
+            completedTasks.forEach(function(task) {
+                task.style.display = (task.style.display === 'none' || task.style.display === '') ? 'block' : 'none';
+            });
+
+            // After toggling visibility, dynamically adjust the box height
+            var tasksList = box.querySelector('.completed ul');
+            var size = tasksList.clientHeight;
+
+            // Get the recorded initial height
+            var initialHeight = parseFloat(box.getAttribute('data-initial-height'));
+
+            // Set the box height based on the initial height plus the calculated size
+            box.style.height = (initialHeight + size) + 'px';
+        });
+        @endforeach
+    });
+</script>
+
 
 </body>
 </html>
